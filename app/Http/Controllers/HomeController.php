@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Product_Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -23,6 +26,21 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $products = Product::get();
+        $product_orders = Product_Order::get();
+        //$products = Product::with('brand')->get();
+        // $item="";
+        // foreach ($products as $product) {
+        //     $item = $item." ".$product->name;
+        // }
+        //LOG::INFO($product->name);
+        // $test = 'test';
+        // dd($test);
+        return view('home',['products'=>$products, 'product_orders'=>$product_orders]);
+    }
+
+    public function order()
+    {
+        return "order test";
     }
 }
