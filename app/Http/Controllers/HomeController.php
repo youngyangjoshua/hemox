@@ -39,6 +39,11 @@ class HomeController extends Controller
         return view('home',['products'=>$products, 'product_orders'=>$product_orders]);
     }
 
+    // public function checkout()
+    // {
+    //     return view('checkout');
+    // }
+
     public function order()
     {
         return "order test";

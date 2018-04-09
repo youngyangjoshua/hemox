@@ -1,6 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
+
+@section('after-style')
+    <style>
+    .buy_now {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+</style>
+@endsection
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="row course-set courses__row">
@@ -16,13 +32,13 @@
 
                     @if($product->storage > 0)
                         <center>
-                        <select>
+                        <select id="product_quantity_{{$product->id}}">
                             @for($i=1; $i<= $product->storage ; $i++){
                                 <option value={{ $i }}>{{ $i }}</option>
                             }
                             @endfor
                         </select>
-                        <button id="btn_buy_now">Buy Now</button>
+                        <button id="btn_buy_now" data-productID={{ $product->id }} class='buy_now'>Buy Now</button>
                         </center>
                     @else
                         <center>SOLD OUT</center>
@@ -61,4 +77,36 @@
         </div> -->
     </div>
 </div>
+@endsection
+
+@section('after-script')
+<script>
+    $(document).ready(function(){
+        $('.buy_now').click(function(){
+            var c = confirm("Are you sure you want to buy this product?");
+            if(c==true){
+                var product_id = $(this).attr('data-productID');
+                var product_quantity = $('#product_quantity_'+$(this).attr('data-productID')).val();
+                //alert(product_quantity);
+                $.ajax({
+                    url:"{{ route('checkout') }}",
+                    type:'get',
+                    dataType:'json',
+                    data: {'product_id':product_id, 'product_quantity':product_quantity},
+                    success: function(data){
+                        
+                        if(data['status']=="success"){
+                            window.location.href = data['redirect'];
+                        }
+                        console.log(data);
+                    },
+                });
+            }
+            else
+            {
+                
+            }
+        });
+    });
+</script>
 @endsection
